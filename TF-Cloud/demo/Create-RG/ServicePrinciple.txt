@@ -1,0 +1,20 @@
+Get Sub ID manually from azure portal or running az account list -o table
+
+If you have multiple options run "az account set --subscription={SubID}"
+az account set --subscription="6e636a88-0376-4c2e-8e2b-802913740787"
+
+Run below cmd to create new service principle account
+az login --service-principal -u $AZURE_SERVICE_PRINCIPAL_NAME -p $AZURE_SECRET --tenant $AZURE_TENANT
+az ad sp create-for-rbac -n "GitLab-AppRegister" --role contributor --scope /subscriptions/6e636a88-0376-4c2e-8e2b-802913740787
+
+$AZURE_SERVICE_PRINCIPAL_NAME = Azure
+$AZURE_SECRET = ${The one that I've defined via Certificates & secrets section in the app registration}
+$AZURE_TENANT = ${The azure tenant that I find in the app registration}
+
+App ID : 98490ee7-1fce-48fd-aa72-12f9fd1f7286
+Tenant ID : 3341e9d7-b57c-4795-882f-ad0292cee8b6
+Subscription : 6e636a88-0376-4c2e-8e2b-802913740787
+Secret ID : 6zj8Q~VFbChPhrR07kO.kNsHiy6Px7~kibctCa7P
+
+Connect to Azure using service principle
+az login --service-principal -u '98490ee7-1fce-48fd-aa72-12f9fd1f7286' -p '6zj8Q~VFbChPhrR07kO.kNsHiy6Px7~kibctCa7P' --tenant '3341e9d7-b57c-4795-882f-ad0292cee8b6'
