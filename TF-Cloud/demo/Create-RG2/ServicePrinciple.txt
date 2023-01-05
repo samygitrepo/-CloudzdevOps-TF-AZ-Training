@@ -1,0 +1,45 @@
+Follow below steps to connect TF Cloud Workspace with Azxure
+
+1. Get your subscription ID
+
+- Login maually to your azure portal
+- Search "Subscription" 
+- Select the correct subscription to which you wanted to create resources from TF
+- Make a note of Subscription ID. It is "6e636a88-0376-4c2e-8e2b-802913740787" in our case.
+- If you have multiple options run "az account set --subscription={SubID}"
+    az account set --subscription="6e636a88-0376-4c2e-8e2b-802913740787"
+
+2. Create Service Principle (SP)
+
+- Connect to Azure from Terraform CLI using az login
+- SP can be created manually by navigating to Azure Active Directory --> App Registration from Azure portal
+- Or, you can do same by running below az CLI cmd. Note that you need to have contributor access for that SP
+- az ad sp create-for-rbac -n "SP-TF-Cloud-GitLab" --role contributor --scope /subscriptions/6e636a88-0376-4c2e-8e2b-802913740787
+- Once you run above cmd, you will get output like below
+
+{
+  "appId": "b64ef069-487a-4ee2-a094-e902a6e4f176",
+  "displayName": "SP2-TF-Cloud-GitLab",
+  "password": "i_q8Q~CPjNqgo1fB23BFjjp3RiSLH8YSqyCLjbN5",
+  "tenant": "3341e9d7-b57c-4795-882f-ad0292cee8b6"
+}
+
+- Make a note of It
+- You can verify same in AAD
+
+3. Connect to Azure using service principle
+
+-Check using the SP you created above if you're able to connect with Azure
+  -u = appId --> b64ef069-487a-4ee2-a094-e902a6e4f176  
+  -p = password --> i_q8Q~CPjNqgo1fB23BFjjp3RiSLH8YSqyCLjbN5
+  --tenant = tenant --> 3341e9d7-b57c-4795-882f-ad0292cee8b6
+  az login --service-principal -u '763cb9cb-a922-4381-b22a-c3444d8eb082' -p 'y1b8Q~6_Uc6GfcO24klU8gQV6EQnYbCF231zccdw' --tenant '3341e9d7-b57c-4795-882f-ad0292cee8b6'
+
+4. Create below environment variables in TF Cloud Workspace
+
+    ARM_CLIENT_ID = appId
+    ARM_SUBSCRIPTION_ID = 6e636a88-0376-4c2e-8e2b-802913740787 <your-sub-id>
+    ARM_TENANT_ID = tenant
+    ARM_CLIENT_SECRET = password
+
+    Ref TF Workspace - https://app.terraform.io/app/Gitlab-Organization/workspaces/terraform-demo-gitlab-project1
